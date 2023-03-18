@@ -7,7 +7,8 @@
 #include <iomanip>
 #include <chrono> 
 #include <algorithm>
-using namespace std;   
+using namespace std;
+
 const string CONFIG_DIR_PATH = "/data/media/0/Android/Manjusaka/自适应Dpi";
 const string CONFIG_FILE_PATH = CONFIG_DIR_PATH + "/Manjusaka_Dpi.conf";
 const string LOG_FILE_PATH = CONFIG_DIR_PATH + "/Manjusaka_Dpi.log";
@@ -21,35 +22,37 @@ ofstream log_f1(LOG_FILE_PATH.c_str());
 string get_default_resolution()
 {
     auto start_time = chrono::high_resolution_clock::now(); // 开始计时
-    FILE *fp = popen(DEFAULT_RESOLUTION_CMD.c_str(), "r");
-    if (fp == NULL)
-    {
-        std::string date_str = "";
-    if (FILE *fp = popen("date +\"%Y-%m-%d %H:%M:%S\"", "r")) {
-        if (char buf[1024]; fgets(buf, sizeof(buf), fp)) {
-            date_str = buf;
+
+    string default_res;
+    ifstream conf_file(CONFIG_FILE_PATH);
+    if (conf_file.good()) {  // 如果配置文件存在
+        string line;
+        while (getline(conf_file, line)) {
+            if (line.substr(0, 11) == "DefaultDpi=") {
+                default_res = line.substr(11);
+                break;
+            }
         }
-        pclose(fp);
+    } else {  // 如果配置文件不存在
+        mkdir(CONFIG_DIR_PATH.c_str(), 0777);  // 创建配置文件所在的目录
+        ofstream new_conf_file(CONFIG_FILE_PATH);
+        new_conf_file << "# Author:Manjusaka(酷安@曼珠沙华Y)" << std::endl;
+        new_conf_file << "# Group:647299031" << std::endl;
+        new_conf_file << "# QQ:898780441" << std::endl;
+        new_conf_file << "# 默认Dpi,默认Dpi修改后需要重启才能生效,其他的不用重启" << std::endl;
+        new_conf_file << "DefaultDpi=420\n";
+        new_conf_file << "# 格式为 包名 Dpi" << endl;
+        new_conf_file << "# 以下为示例" << endl;
+        new_conf_file << "com.tencent.tmgp.sgame 400" << endl;
+        new_conf_file << "com.termux 310" << endl;
+        new_conf_file.close();
+        default_res = "440";
     }
-
-
-    date_str.erase(date_str.find_last_not_of(" \n\r\t")+1);
-        
-        log_f1 << "[" << date_str << "]" << "无法获取默认Dpi。" << std::endl;
-        exit(1);
-    }
-    char buf[128] = {0};
-    fgets(buf, sizeof(buf), fp);
-    pclose(fp);
-
-    string default_res = string(buf);
-    default_res.erase(default_res.find_last_not_of("\n") + 1);
 
     auto end_time = chrono::high_resolution_clock::now(); // 结束计时
     auto time_diff = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
     return default_res;
 }
-
 // 获取当前应用程序名称
 string get_current_app_name()
 {
@@ -114,7 +117,7 @@ string get_current_resolution()
 
 int main()
 {
-    // 创建配置文件夹及日志文件
+    
     if (mkdir(CONFIG_DIR_PATH.c_str(), 0755) != 0)
     {
         if (access(CONFIG_DIR_PATH.c_str(), F_OK) != 0)
@@ -129,21 +132,6 @@ int main()
     string prev_res;
     bool is_restored_default_res = false;
     bool kunkun = false;
-    // 如果配置文件不存在，则创建一个示例配置文件
-    if (!ifstream(CONFIG_FILE_PATH))
-    {
-        ofstream config_file(CONFIG_FILE_PATH.c_str());
-        config_file << "# Author:Manjusaka(酷安@曼珠沙华Y)" << std::endl;
-        config_file << "# Group:647299031" << std::endl;
-        config_file << "# QQ:898780441" << std::endl;
-        config_file << "# 格式为 包名 Dpi" << endl;
-        config_file << "# 以下为示例" << endl;
-        config_file << "com.tencent.tmgp.sgame 400" << endl;
-        config_file << "com.termux 310" << endl;
-        config_file.close();
-        chmod(CONFIG_FILE_PATH.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-
-    }
 
     while (true)
     {
