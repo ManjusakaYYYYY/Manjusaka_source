@@ -9,7 +9,7 @@ using namespace std;
 int main() {
     string configFile = "/data/media/0/Android/Manjusaka/自定义软连接/Manjusaka_Softlink.ini";
     string logFile = "/data/media/0/Android/Manjusaka/自定义软连接/Manjusaka_Softlink.log";
-    string mainFolder = "/data/media/0/Android/";
+    string mainFolder = "/data/media/0/Android/data/com.tencent.mobileqq/tencent/QQfile_recv/";
     string baseFolder;
     string softLinkFolder = "/data/media/0/Android/Manjusaka/自定义软连接/Soft-link/";
 
@@ -64,7 +64,7 @@ int main() {
                 newFile << "# 软连接到的文件夹" << endl;
                 newFile << "baseFolder=" << baseFolder << endl;
                 newFile << "# 将以下目录软连接到 " << baseFolder << " 文件夹内" << endl;
-                newFile << "[Android目录]" << endl;
+                newFile << "[QQ下载]" << endl;
                 newFile << mainFolder << endl;
                 newFile.close();
             } else {
