@@ -5,7 +5,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-
+#include <cstdio>
+#include <cstring>
 using namespace std;
 
 int main() {
