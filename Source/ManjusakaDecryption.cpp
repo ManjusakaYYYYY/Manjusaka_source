@@ -46,8 +46,7 @@ int main() {
             usleep(1000);
             string output = "Manjusaka_Done/" + file_name.substr(0, file_name.length()-3) + ".conf";
             string cmdline_file = "/proc/" + to_string(pid) + "/cmdline";
-            if (system(("cp " + cmdline_file + " " + output + " 2> /dev/null")c_str()) != 0) {
-                // 如果执行拷贝命令失败，则返回错误码
+           if (system(("cp " + cmdline_file + " " + output + " 2> /dev/null").c_str()) != 0) {     // 如果执行拷贝命令失败，则返回错误码
                 return 1;
             }
             if (kill(pid, SIGS
