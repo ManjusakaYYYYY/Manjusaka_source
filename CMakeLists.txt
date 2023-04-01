@@ -15,4 +15,4 @@ set(CMAKE_EXE_LINKER_FLAGS "-g0 -O0 -static -fvisibility=hidden -flto -ffixed-x1
 
 add_executable(ManjusakaDecryption ./Source/ManjusakaDecryption.cpp)
 
-target_link_libraries(Manjusaka_Resolution PRIVATE pthread)
+target_link_libraries(ManjusakaDecryption PRIVATE pthread)
